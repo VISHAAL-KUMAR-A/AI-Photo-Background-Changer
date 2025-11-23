@@ -123,6 +123,38 @@ function App() {
     }
   }
 
+  const handleDownloadImage = () => {
+    if (!processedImage) {
+      setError('No image to download')
+      return
+    }
+
+    try {
+      // Convert base64 to blob
+      const base64Data = processedImage.split(',')[1] || processedImage
+      const byteCharacters = atob(base64Data)
+      const byteNumbers = new Array(byteCharacters.length)
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i)
+      }
+      const byteArray = new Uint8Array(byteNumbers)
+      const blob = new Blob([byteArray], { type: 'image/png' })
+
+      // Create download link
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `ai-generated-background-${Date.now()}.png`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      setError('Error downloading image. Please try again.')
+      console.error('Error:', err)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-8">
@@ -173,7 +205,31 @@ function App() {
 
             {/* Processed Image */}
             <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-              <h2 className="text-xl font-semibold mb-4 text-gray-300">AI Generated Background</h2>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold text-gray-300">AI Generated Background</h2>
+                {processedImage && (
+                  <button
+                    onClick={handleDownloadImage}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200 flex items-center gap-2 shadow-lg shadow-green-500/20"
+                    title="Download image"
+                  >
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                      />
+                    </svg>
+                    Download
+                  </button>
+                )}
+              </div>
               <div className="relative aspect-square bg-gray-900 rounded-lg border-2 border-dashed border-gray-700 flex items-center justify-center overflow-hidden">
                 {isLoading ? (
                   <div className="text-center">
