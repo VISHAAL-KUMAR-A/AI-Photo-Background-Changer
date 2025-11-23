@@ -131,11 +131,6 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-#### Create a superuser (optional, for admin access):
-```bash
-python manage.py createsuperuser
-```
-
 ### 3. Frontend Setup
 
 #### Navigate to frontend directory:
