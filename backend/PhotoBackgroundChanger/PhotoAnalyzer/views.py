@@ -18,6 +18,8 @@ load_dotenv()
 
 # Create your views here.
 
+# I created this add photo class to add the photo id to the database.With the id we can later either remove the photo to change the photo or generate a new background for the photo using AI
+
 
 class add_photo(APIView):
     def post(self, request):
@@ -45,6 +47,8 @@ class add_photo(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+# I created this remove photo class to remove the photo id from the database. This will be useful when the user wants to change the current photo
+
 class remove_photo(APIView):
     def delete(self, request):
         photo_id = request.data.get("photo_id")
@@ -60,6 +64,8 @@ class remove_photo(APIView):
                 "message": "Error removing photo",
                 "error": str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+# This class is used to generate a new background for the photo using AI.
 
 
 class generate_background(APIView):
@@ -215,3 +221,9 @@ class generate_background(APIView):
                 "message": "Error generating background",
                 "error": str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# This reason I added composite images function and remove background function is to remove the background from the photo and then generate a new background for the photo using AI and then composite the product image onto the new background. Before that I got the output but I was only getting the background image only. So I decided to remove the image and add it to the background image.
+
+
+# I used Openai key to generate images because it is generally more accurate. It also supports generating HD images which can be implemented in the future. Here in particular we are using DALL-E 3 model which is the latest model from Openai.
